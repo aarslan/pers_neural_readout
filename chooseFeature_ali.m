@@ -75,7 +75,7 @@ switch features
         Xtest  = [];
         allFeat=fieldnames(EEGf.featClassif);%{'data','range','contrast','std','der1','der2','der3','raw'};
         for f=1:length(allFeat)
-            [XtrainF,XtestF]= chooseFeature(EEGf,EXP,crossval,'timepoint',timepoint,'indBin',indBin,'features',allFeat{f},'area',area,'normalization',normalization);
+            [XtrainF,XtestF]= chooseFeature_ali(EEGf,EXP,crossval,'timepoint',timepoint,'indBin',indBin,'features',allFeat{f},'area',area,'normalization',normalization);
             % Normalize each feature
             %------------------------
             XtrainF = reshape(zscore(XtrainF(:)),size(XtrainF,1),size(XtrainF,2));

@@ -44,7 +44,7 @@ genExpFields = fieldnames(genExpParam);
 for ff=1:length(genExpFields)
     genExpString = [genExpString ', ''' genExpFields{ff} ''', genExpParam.' genExpFields{ff}];
 end
-genExpString = ['generateExperiment(EEG, ' genExpString(2:end) ');'];
+genExpString = ['generateExperiment_ali(EEG, ' genExpString(2:end) ');'];
 [EXP] = eval(genExpString);
 
 
