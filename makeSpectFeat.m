@@ -1,5 +1,5 @@
 setName = EEG.filename(1:3);
-myDir = ['./sets/tfSets/' setName '/'];
+myDir = ['/gpfs/data/tserre/aarslan/NIPS_alter/sets/tfSets/' setName '/'];
 if ~exist(myDir)
     mkdir(myDir)
 end

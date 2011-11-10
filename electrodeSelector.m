@@ -68,7 +68,7 @@ for ff=1:numel(feats)
                 else
                     decodeOutPath = 0;
                 end
-                EXP{gg}  =  mainClassification(tempEEG, paramStruct, feats(ff), 'off', timeMode, decodeOutPath);
+                EXP{gg}  =  mainClassification(tempEEG, paramStruct, feats(ff), 'off', decodeOutPath);
                 %rand =  mainClassification(tempEEG, paramStruct, feats(ff), 'on', timeMode, decodeOutPath);
                 
                 %[rien performanceCurves{gg} decInfo{gg}] = mainClassificationPlotPerf(EXP, rand, 1);

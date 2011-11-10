@@ -14,10 +14,6 @@
 %                     compute statistical threshlod, save a .mat with the same name
 %                     but finished by rand in ./rand {'off'};
 %
-%   timeMode        = different way of doing the temporal classification can be:
-%                      - ('pointByPoint'): run a classifier for each point of time
-%                      - ('allEpoch')    : run one classifier using the allepoch data points
-%                      - {'both'}        : run both to plot the accuracy of the first and the weights of the second
 % Outputs:            meaning (size or options)
 %
 %   EXP             = structure all parameters about classification
@@ -26,13 +22,19 @@
 % Author: Ali, Maxime, Serre Lab, 2010
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [EXP] = mainClassification(EEG, paramStruct, feats, rand, timeMode, outPath )
+function [EXP] = mainClassification(EEG, paramStruct, feats, rand, outPath )
 
 if ischar(paramStruct)
     load(paramStruct)
 else
     % create the parameters
     [generalParam chooseFeatParam genExpParam classifParam permLabParam] = paramMaker;
+end
+
+
+if generalParam.respLock
+    EEG = nr_rtLockEEG(EEG, generalParam.x, generalParam.l);
+    EEG.times = EEG.newTimes;
 end
 
 % parse the parameters from the structure and call generateExperiment in
@@ -45,6 +47,11 @@ end
 genExpString = ['generateExperiment(EEG, ' genExpString(2:end) ');'];
 [EXP] = eval(genExpString);
 
+
+
+EXP.respLock        = generalParam.respLock;
+EXP.respLockPar.x   = generalParam.x;
+EXP.respLockPar.l   = generalParam.l;
 EXP.timeMode        = generalParam.timeMode;
 EXP.timeInter       = generalParam.timeInter;
 EXP.chooseFeatParam = chooseFeatParam;
@@ -52,10 +59,11 @@ EXP.genExpParam     = genExpParam;
 EXP.classifParam    = classifParam;
 EXP.permLabParam    = permLabParam;
 
+
 % Time working interval %
 
-indt1     = max(find(EEG.times<=EXP.timeInter(1)));
-indt2     = min(find(EEG.times>=EXP.timeInter(2)));
+[~, indt1]       = min(abs(EEG.times-EXP.timeInter(1))); %max(find(EEG.times<=EXP.timeInter(1)));
+[~, indt2]       = min(abs(EEG.times-EXP.timeInter(2))); %min(find(EEG.times>=EXP.timeInter(2)));
 t1        = EEG.times(indt1);
 t2        = EEG.times(indt2);
 timeInter = [t1,t2];
@@ -114,7 +122,7 @@ for i=1:EXP.genExpParam.crossValid
 
         % PointByPoint
         %-------------
-        if strcmp(timeMode,'pointByPoint') || strcmp(timeMode,'both')
+        if strcmp(generalParam.timeMode,'pointByPoint') || strcmp(generalParam.timeMode,'both')
             time = indt1:indt2;
             % loop over point of time
             %-------------------------
@@ -149,7 +157,7 @@ for i=1:EXP.genExpParam.crossValid
         
         % allEpoch
         %---------
-        if strcmp(timeMode,'allEpoch') || strcmp(timeMode,'both')
+        if strcmp(generalParam.timeMode,'allEpoch') || strcmp(generalParam.timeMode,'both')
             display(['Classif allEpoch:  crossvalidation ' num2str(i) ' over ' num2str(genExpParam.crossValid)]);
             % chooseFeature_ali
             %--------------

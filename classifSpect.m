@@ -1,13 +1,13 @@
 function classifSpect(monNom)
 
-myDir = ['./sets/tfSets/' monNom '/'];
-myResDir = './EXPfiles/';
+myDir = ['/gpfs/data/tserre/aarslan/NIPS_alter/sets/tfSets/' monNom '/'];
+myResDir = '/gpfs/data/tserre/aarslan/NIPS_alter/EXPfiles/';
 myFiles = dir([myDir '*.mat']);
 
 randMode = 'off';
 timeMode = 'pointByPoint';
 
-parfor ff=1:numel(myFiles)
+for ff=1:numel(myFiles)
     ff
     name = [myDir myFiles(ff).name];
     fName = [myFiles(ff).name(1:end-4)];

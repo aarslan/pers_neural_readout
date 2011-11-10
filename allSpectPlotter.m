@@ -1,9 +1,9 @@
 function allSpectPlotter
-subjList = {'006', '007', '008' };
+subjList = {'006'};
 
 
-myEXPDir = '/gpfs/home/aarslan/work/NIPS_alter/EXPfiles/';
-myResDir = '/gpfs/home/aarslan/work/NIPS_alter/results/';
+myEXPDir = '/gpfs/data/tserre/aarslan/NIPS_alter/EXPfiles/';
+myResDir = '/gpfs/home/aarslan/scratch/NIPS_alter/results/';
 
 for subjNo = 1:numel(subjList)
     
@@ -14,20 +14,22 @@ for subjNo = 1:numel(subjList)
     areaFolders = {areaFolders.name};
     areaFolders = areaFolders(3:end);
     [r c] = calcSubplot(numel(areaFolders));
-    hands = zeros(1,numel(areaFolders));
+    %hands = zeros(1,numel(areaFolders));
     
     for areaNo=1:numel(areaFolders)
         area = areaFolders{areaNo};
         
         hands(areaNo) = spectDecPlotter(subjName, area);
-        title(area)
+        title(hands(areaNo).main, regexprep(area, '_', '\\_'))
+                print(hands(areaNo).fig, [myResDir subjName '/' area] , '-djpeg')
+                print(hands(areaNo).fig, [myResDir subjName '/' area] , '-dpdf')
+        close(hands(areaNo).fig)
     end
-    
-    for areaNo=1:numel(areaFolders)
-        area = areaFolders{areaNo};
-        print(hands(areaNo), [myResDir subjName '/' area] , '-djpeg')
-        close(hands(areaNo))
-    end
+%     
+%     for areaNo=1:numel(areaFolders)
+%         area = areaFolders{areaNo};
+%         
+%     end
     
 end
 
